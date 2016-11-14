@@ -1,3 +1,4 @@
+import socket
 try:
     from theme import replace_posts_with_topics
 except FileNotFoundError:
@@ -11,7 +12,20 @@ except FileNotFoundError:
           'используйте команду "python3 train.py" ')
     exit(0)
 
+
+def test_internet():
+    try:
+        socket.gethostbyaddr('www.yandex.ru')
+    except socket.gaierror:
+        return False
+    return True
+
+
 if __name__ == '__main__':
+    if not test_internet():
+        print("Отсутствует интернет соединение, "
+              "проверьте подключение и повторите попытку!")
+        exit(0)
     person_id = input("Введите идентификатор пользователя:")
     user = RedditUser(person_id)
     user.get_user_data()
