@@ -67,14 +67,16 @@ class RedditUser(User):
         r = requests.get(
             'http://www.reddit.com/user/%s/comments/.json' % self.user_id)
         data = r.json()
-        user_data = []
-        try:
-            for child in data['data']['children']:
-                if (child['data']['parent_id'] == child['data']['link_id']):
-                    user_data.append(child['data'])
-        except KeyError:
-            print ("Большое количество запросов...Повторите попытку!")
+        if 'error' in data.keys():
+            if data['error'] == 404:
+                print("Такого пользователя не существует!")
+            elif data['error'] == 429:
+                print("Большое количество запросов...Повторите попытку!")
             exit(0)
+        user_data = []
+        for child in data['data']['children']:
+            if (child['data']['parent_id'] == child['data']['link_id']):
+                user_data.append(child['data'])
         self.data = user_data
         return
 
