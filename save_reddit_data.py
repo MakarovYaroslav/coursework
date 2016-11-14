@@ -2,6 +2,8 @@ import requests
 import sentiment_mod as s
 import argparse
 from createuci import Text
+import json
+import os
 
 
 class User:
@@ -106,14 +108,20 @@ class RedditUser(User):
                 user_attitude[theme]['neg'] += neg
         return user_attitude
 
-    def print_user_attitude(self, user_attitude):
+    def print_and_save_user_attitude(self, user_attitude):
         print('Отношение пользователя к темам:')
+        data = {}
         for topic, tone in user_attitude.items():
             neg = tone['neg']
             pos = tone['pos']
             total = pos + neg
             pos_percent = (pos / total) * 100
             print('Тема - ' + topic + '. Положительно на ' + str(pos_percent) + '%')
+            data[topic] = {'pos': pos_percent}
+        if not os.path.exists('users_results'):
+            os.mkdir('users_results')
+        with open('./users_results/' + self.user_id + '.json', 'w') as file:
+            json.dump(data, file)
         return
 
 
