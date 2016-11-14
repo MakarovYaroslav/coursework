@@ -37,4 +37,4 @@ if __name__ == '__main__':
     neg_topics_with_tone = replace_posts_with_topics(negative_posts)
     attitude_of_user = user.calculate_user_attitude(
         pos_topics_with_tone, neg_topics_with_tone)
-    user.print_user_attitude(attitude_of_user)
+    user.print_and_save_user_attitude(attitude_of_user)
