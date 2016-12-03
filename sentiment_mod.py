@@ -163,28 +163,6 @@ class LinearSVCAnaliser(SemanticAnaliser):
         self.train_and_save_classifier(training_set, testing_set)
 
 
-class VoteClassifier(ClassifierI):
-    def __init__(self, *classifiers):
-        self._classifiers = classifiers
-
-    def classify(self, features):
-        votes = []
-        for c in self._classifiers:
-            v = c.classify(features)
-            votes.append(v)
-        return mode(votes)
-
-    def confidence(self, features):
-        votes = []
-        for c in self._classifiers:
-            v = c.classify(features)
-            votes.append(v)
-
-        choice_votes = votes.count(mode(votes))
-        conf = choice_votes / len(votes)
-        return conf
-
-
 class MajorityVotingUnit:
     def __init__(self):
         self.analisers = []
@@ -232,3 +210,13 @@ MainClassifier.add_analiser(LinearSVC_classifier)
 # Функция тонального анализа
 def sentiment(text):
     return MainClassifier.classify(text)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("text", help="Текст для тонального анализа")
+    args = parser.parse_args()
+    tone, probability = sentiment(args.text)
+    print("Текст для анализа: %s" % args.text)
+    prob = probability * 100
+    print('Тональность текста "' + tone + '" с вероятностью ' + str(prob) + '%')
