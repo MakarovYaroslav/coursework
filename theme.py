@@ -14,3 +14,14 @@ def replace_posts_with_topics(posts):
     for post, tone in posts:
         topics_with_tone.append([get_post_topics(post), tone])
     return topics_with_tone
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("text", help="Текст для тематического анализа")
+    args = parser.parse_args()
+    topics = get_post_topics(args.text)
+    print("Текст для анализа: %s" % args.text)
+    for topic, probability in topics:
+        prob = probability * 100
+        print('Принадлежит к теме "' + topic + '" с вероятностью ' + str(prob) + '%')
